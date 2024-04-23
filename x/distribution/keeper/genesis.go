@@ -129,7 +129,7 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 		k.authKeeper.SetModuleAccount(ctx, moduleAcc)
 	}
 
-	fmt.Println("module addy: ", moduleAcc.GetAddress())
+	panic(fmt.Println("module addy: ", moduleAcc.GetAddress()))
 	fmt.Println("balances: ", balances)
 	fmt.Println("moduleHoldingsInt: ", moduleHoldingsInt)
 	if !balances.Equal(moduleHoldingsInt) {
