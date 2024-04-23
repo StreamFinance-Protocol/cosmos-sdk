@@ -479,6 +479,9 @@ func (m *Manager) RegisterServices(cfg Configurator) error {
 // module must return a non-empty validator set update to correctly initialize
 // the chain.
 func (m *Manager) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, genesisData map[string]json.RawMessage) (*abci.ResponseInitChain, error) {
+	fmt.Println("inside InitGenesis")
+	fmt.Println("balance genesis: ", genesisData["bank"])
+
 	var validatorUpdates []abci.ValidatorUpdate
 	ctx.Logger().Info("initializing blockchain state from genesis.json")
 	for _, moduleName := range m.OrderInitGenesis {
