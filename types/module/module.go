@@ -490,6 +490,8 @@ func (m *Manager) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, genesisData 
 		}
 
 		mod := m.Modules[moduleName]
+
+		fmt.Println("MODULE: ", mod)
 		// we might get an adapted module, a native core API module or a legacy module
 		if module, ok := mod.(appmodule.HasGenesis); ok {
 			ctx.Logger().Debug("running initialization for module", "module", moduleName)
@@ -509,6 +511,8 @@ func (m *Manager) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, genesisData 
 		} else if module, ok := mod.(HasABCIGenesis); ok {
 			ctx.Logger().Debug("running initialization for module", "module", moduleName)
 			moduleValUpdates := module.InitGenesis(ctx, cdc, genesisData[moduleName])
+
+			fmt.Println("moduleValUpdates: ", moduleValUpdates)
 
 			// use these validator updates if provided, the module manager assumes
 			// only one module will update the validator set
