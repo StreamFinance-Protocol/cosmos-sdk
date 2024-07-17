@@ -77,6 +77,9 @@ func VerifySignature(
 		if err != nil {
 			return err
 		}
+		fmt.Println("SINGLE SIGNATURE DATA")
+		fmt.Println(signBytes)
+		fmt.Println(data.Signature)
 		if !pubKey.VerifySignature(signBytes, data.Signature) {
 			return fmt.Errorf("unable to verify single signer signature")
 		}

@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"cosmossdk.io/collections"
 
@@ -38,8 +37,6 @@ func (ak AccountKeeper) HasAccount(ctx context.Context, addr sdk.AccAddress) boo
 
 // GetAccount implements AccountKeeperI.
 func (ak AccountKeeper) GetAccount(ctx context.Context, addr sdk.AccAddress) sdk.AccountI {
-
-	fmt.Println("THIS SHOULD PRINT")
 
 	acc, err := ak.Accounts.Get(ctx, addr)
 	if err != nil && !errors.Is(err, collections.ErrNotFound) {

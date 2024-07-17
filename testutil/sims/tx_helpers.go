@@ -77,10 +77,15 @@ func GenSignedMockTx(r *rand.Rand, txConfig client.TxConfig, msgs []sdk.Msg, fee
 		if err != nil {
 			panic(err)
 		}
+
 		sig, err := p.Sign(signBytes)
 		if err != nil {
 			panic(err)
 		}
+		fmt.Println("SIGN BYTES PRE SIGN")
+		fmt.Println(signBytes)
+		fmt.Println("SIGNATURE PRE SIGN")
+		fmt.Println(sig)
 		sigs[i].Data.(*signing.SingleSignatureData).Signature = sig
 		err = tx.SetSignatures(sigs...)
 		if err != nil {

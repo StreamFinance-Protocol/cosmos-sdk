@@ -723,7 +723,7 @@ func cacheTxContext(ctx sdk.Context, txBytes []byte) (sdk.Context, storetypes.Ca
 }
 
 func (app *BaseApp) preBlock(req *abci.RequestFinalizeBlock) error {
-	fmt.Println("INSIDE PRE BLOCK")
+
 	if app.preBlocker != nil {
 		ctx := app.finalizeBlockState.Context()
 		rsp, err := app.preBlocker(ctx, req)
@@ -744,7 +744,7 @@ func (app *BaseApp) preBlock(req *abci.RequestFinalizeBlock) error {
 }
 
 func (app *BaseApp) beginBlock(req *abci.RequestFinalizeBlock) (sdk.BeginBlock, error) {
-	fmt.Println("INSIDE BEGIN BLOCK")
+
 	var (
 		resp sdk.BeginBlock
 		err  error
@@ -771,7 +771,7 @@ func (app *BaseApp) beginBlock(req *abci.RequestFinalizeBlock) (sdk.BeginBlock, 
 }
 
 func (app *BaseApp) deliverTx(tx []byte) *abci.ExecTxResult {
-	fmt.Println("INSIDE DELIVER TX")
+
 	gInfo := sdk.GasInfo{}
 	resultStr := "successful"
 
@@ -784,7 +784,6 @@ func (app *BaseApp) deliverTx(tx []byte) *abci.ExecTxResult {
 		telemetry.SetGauge(float32(gInfo.GasWanted), "tx", "gas", "wanted")
 	}()
 
-	fmt.Println("RUN TX")
 	gInfo, result, anteEvents, err := app.runTx(execModeFinalize, tx)
 	if err != nil {
 		resultStr = "failed"
@@ -797,7 +796,6 @@ func (app *BaseApp) deliverTx(tx []byte) *abci.ExecTxResult {
 		)
 		return resp
 	}
-	fmt.Println("RUN TX NO ERROR")
 
 	resp = &abci.ExecTxResult{
 		GasWanted: int64(gInfo.GasWanted),
@@ -813,7 +811,7 @@ func (app *BaseApp) deliverTx(tx []byte) *abci.ExecTxResult {
 // endBlock is an application-defined function that is called after transactions
 // have been processed in FinalizeBlock.
 func (app *BaseApp) endBlock(ctx context.Context) (sdk.EndBlock, error) {
-	fmt.Println("INSIDE END BLOCK")
+
 	var endblock sdk.EndBlock
 
 	if app.endBlocker != nil {
@@ -975,7 +973,7 @@ func (app *BaseApp) runCheckTxConcurrently(mode execMode, txBytes []byte) (gInfo
 // returned if the tx does not run out of gas and if all the messages are valid
 // and execute successfully. An error is returned otherwise.
 func (app *BaseApp) runTx(mode execMode, txBytes []byte) (gInfo sdk.GasInfo, result *sdk.Result, anteEvents []abci.Event, err error) {
-	fmt.Println("INSIDE RUN TX")
+
 	if mode == execModeCheck || mode == execModeReCheck {
 		panic("Expected CheckTx and RecheckTx to be executed via runCheckTxConcurrently")
 	}
@@ -1027,14 +1025,13 @@ func (app *BaseApp) runTx(mode execMode, txBytes []byte) (gInfo sdk.GasInfo, res
 		defer consumeBlockGas()
 	}
 
-	fmt.Println("RUN TX DECODER IN RUN")
 	tx, err := app.txDecoder(txBytes)
 	if err != nil {
 		return sdk.GasInfo{}, nil, nil, err
 	}
 
 	msgs := tx.GetMsgs()
-	fmt.Println("RUN TX VALIDATE BASIC TX MSGS")
+
 	if err := validateBasicTxMsgs(msgs); err != nil {
 		return sdk.GasInfo{}, nil, nil, err
 	}
@@ -1061,10 +1058,9 @@ func (app *BaseApp) runTx(mode execMode, txBytes []byte) (gInfo sdk.GasInfo, res
 		// performance benefits, but it'll be more difficult to get right.
 		anteCtx, msCache = cacheTxContext(ctx, txBytes)
 		anteCtx = anteCtx.WithEventManager(sdk.NewEventManager())
-		fmt.Println("RUN TX ANTE HANDLER")
+
 		newCtx, err := app.anteHandler(anteCtx, tx, mode == execModeSimulate)
-		fmt.Println("RUN TX ANTE HANDLER DONE")
-		fmt.Println(err)
+
 		if !newCtx.IsZero() {
 			// At this point, newCtx.MultiStore() is a store branch, or something else
 			// replaced by the AnteHandler. We want the original multistore.
