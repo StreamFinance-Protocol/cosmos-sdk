@@ -887,6 +887,8 @@ func (app *BaseApp) FinalizeBlock(req *abci.RequestFinalizeBlock) (res *abci.Res
 	app.mtx.Lock()
 	defer app.mtx.Unlock()
 
+	fmt.Println("HALOU")
+
 	defer func() {
 		// call the streaming service hooks with the FinalizeBlock messages
 		for _, streamingListener := range app.streamingManager.ABCIListeners {
