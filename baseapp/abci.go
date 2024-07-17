@@ -724,6 +724,7 @@ func (app *BaseApp) VerifyVoteExtension(req *abci.RequestVerifyVoteExtension) (r
 // must be used.
 func (app *BaseApp) internalFinalizeBlock(ctx context.Context, req *abci.RequestFinalizeBlock) (*abci.ResponseFinalizeBlock, error) {
 	var events []abci.Event
+	fmt.Println("COSMOS STREAM COSMOS STREAM - internal finalize blcok")
 
 	if err := app.checkHalt(req.Height, req.Time); err != nil {
 		return nil, err
@@ -886,7 +887,7 @@ func (app *BaseApp) internalFinalizeBlock(ctx context.Context, req *abci.Request
 func (app *BaseApp) FinalizeBlock(req *abci.RequestFinalizeBlock) (res *abci.ResponseFinalizeBlock, err error) {
 	app.mtx.Lock()
 	defer app.mtx.Unlock()
-
+	fmt.Println("COSMOS STREAM COSMOS STREAM - FinalizeBlock")
 	defer func() {
 		// call the streaming service hooks with the FinalizeBlock messages
 		for _, streamingListener := range app.streamingManager.ABCIListeners {
