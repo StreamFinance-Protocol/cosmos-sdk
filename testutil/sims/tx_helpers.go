@@ -2,7 +2,6 @@ package sims
 
 import (
 	"context"
-	"fmt"
 	"math/rand"
 	"testing"
 	"time"
@@ -25,7 +24,6 @@ import (
 // GenSignedMockTx generates a signed mock transaction.
 func GenSignedMockTx(r *rand.Rand, txConfig client.TxConfig, msgs []sdk.Msg, feeAmt sdk.Coins, gas uint64, chainID string, accNums, accSeqs []uint64, priv ...cryptotypes.PrivKey) (sdk.Tx, error) {
 
-	fmt.Println("GEN SIGNED MOCK TX")
 	sigs := make([]signing.SignatureV2, len(priv))
 
 	// create a random length memo
@@ -82,10 +80,6 @@ func GenSignedMockTx(r *rand.Rand, txConfig client.TxConfig, msgs []sdk.Msg, fee
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println("SIGN BYTES PRE SIGN")
-		fmt.Println(signBytes)
-		fmt.Println("SIGNATURE PRE SIGN")
-		fmt.Println(sig)
 		sigs[i].Data.(*signing.SingleSignatureData).Signature = sig
 		err = tx.SetSignatures(sigs...)
 		if err != nil {
