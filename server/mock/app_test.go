@@ -46,7 +46,7 @@ func TestInitApp(t *testing.T) {
 		Hash:   res.AppHash,
 		Height: 1,
 	})
-	app.Commit()
+	app.Commit(&abci.RequestCommit{})
 
 	// make sure we can query these values
 	query := abci.RequestQuery{
@@ -80,7 +80,7 @@ func TestDeliverTx(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, res.AppHash)
 
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	// make sure we can query these values

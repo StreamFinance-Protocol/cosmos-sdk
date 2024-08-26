@@ -52,8 +52,8 @@ func (w cometABCIWrapper) VerifyVoteExtension(_ context.Context, req *abci.Reque
 	return w.app.VerifyVoteExtension(req)
 }
 
-func (w cometABCIWrapper) Commit(_ context.Context, _ *abci.RequestCommit) (*abci.ResponseCommit, error) {
-	return w.app.Commit()
+func (w cometABCIWrapper) Commit(_ context.Context, req *abci.RequestCommit) (*abci.ResponseCommit, error) {
+	return w.app.Commit(req)
 }
 
 func (w cometABCIWrapper) ListSnapshots(_ context.Context, req *abci.RequestListSnapshots) (*abci.ResponseListSnapshots, error) {

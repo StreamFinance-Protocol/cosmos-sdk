@@ -27,7 +27,7 @@ type ABCI interface {
 	// Verify application's vote extension data
 	VerifyVoteExtension(*abci.RequestVerifyVoteExtension) (*abci.ResponseVerifyVoteExtension, error)
 	// Commit the state and return the application Merkle root hash
-	Commit() (*abci.ResponseCommit, error)
+	Commit(*abci.RequestCommit) (*abci.ResponseCommit, error)
 
 	// State Sync Connection
 	ListSnapshots(*abci.RequestListSnapshots) (*abci.ResponseListSnapshots, error)                // List available snapshots
