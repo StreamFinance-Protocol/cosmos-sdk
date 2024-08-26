@@ -155,7 +155,7 @@ func TestSendNotEnoughBalance(t *testing.T) {
 	require.NoError(t, testutil.FundAccount(ctx, s.BankKeeper, addr1, sdk.NewCoins(sdk.NewInt64Coin("foocoin", 67))))
 	_, err := baseApp.FinalizeBlock(&abci.RequestFinalizeBlock{Height: baseApp.LastBlockHeight() + 1})
 	require.NoError(t, err)
-	_, err = baseApp.Commit()
+	_, err = baseApp.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	res1 := s.AccountKeeper.GetAccount(ctx, addr1)
@@ -194,7 +194,7 @@ func TestMsgMultiSendWithAccounts(t *testing.T) {
 	require.NoError(t, testutil.FundAccount(ctx, s.BankKeeper, addr1, sdk.NewCoins(sdk.NewInt64Coin("foocoin", 67))))
 	_, err := baseApp.FinalizeBlock(&abci.RequestFinalizeBlock{Height: baseApp.LastBlockHeight() + 1})
 	require.NoError(t, err)
-	_, err = baseApp.Commit()
+	_, err = baseApp.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	res1 := s.AccountKeeper.GetAccount(ctx, addr1)
@@ -278,7 +278,7 @@ func TestMsgMultiSendMultipleOut(t *testing.T) {
 	require.NoError(t, testutil.FundAccount(ctx, s.BankKeeper, addr2, sdk.NewCoins(sdk.NewInt64Coin("foocoin", 42))))
 	_, err := baseApp.FinalizeBlock(&abci.RequestFinalizeBlock{Height: baseApp.LastBlockHeight() + 1})
 	require.NoError(t, err)
-	_, err = baseApp.Commit()
+	_, err = baseApp.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	testCases := []appTestCase{
@@ -323,7 +323,7 @@ func TestMsgMultiSendDependent(t *testing.T) {
 	require.NoError(t, testutil.FundAccount(ctx, s.BankKeeper, addr1, sdk.NewCoins(sdk.NewInt64Coin("foocoin", 42))))
 	_, err = baseApp.FinalizeBlock(&abci.RequestFinalizeBlock{Height: baseApp.LastBlockHeight() + 1})
 	require.NoError(t, err)
-	_, err = baseApp.Commit()
+	_, err = baseApp.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	testCases := []appTestCase{

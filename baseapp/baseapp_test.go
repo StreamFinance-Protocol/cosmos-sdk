@@ -122,12 +122,12 @@ func getQueryBaseapp(t *testing.T) *baseapp.BaseApp {
 
 	_, err := app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: 1})
 	require.NoError(t, err)
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	_, err = app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: 2})
 	require.NoError(t, err)
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	return app
@@ -190,7 +190,7 @@ func NewBaseAppSuiteWithSnapshots(t *testing.T, cfg SnapshotsConfig, opts ...fun
 		})
 		require.NoError(t, err)
 
-		_, err = suite.baseApp.Commit()
+		_, err = suite.baseApp.Commit(&abci.RequestCommit{})
 		require.NoError(t, err)
 
 		// wait for snapshot to be taken, since it happens asynchronously
@@ -277,14 +277,14 @@ func TestLoadVersion(t *testing.T) {
 	res, err := app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: 1})
 	require.NoError(t, err)
 	commitID1 := storetypes.CommitID{Version: 1, Hash: res.AppHash}
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	// execute a block, collect commit ID
 	res, err = app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: 2})
 	require.NoError(t, err)
 	commitID2 := storetypes.CommitID{Version: 2, Hash: res.AppHash}
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	// reload with LoadLatestVersion
@@ -306,7 +306,7 @@ func TestLoadVersion(t *testing.T) {
 
 	_, err = app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: 2})
 	require.NoError(t, err)
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	testLoadVersionHelper(t, app, int64(2), commitID2)
@@ -393,7 +393,7 @@ func TestSetLoader(t *testing.T) {
 			res, err := app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: 2})
 			require.NoError(t, err)
 			require.NotNil(t, res.AppHash)
-			_, err = app.Commit()
+			_, err = app.Commit(&abci.RequestCommit{})
 			require.NoError(t, err)
 
 			// check db is properly updated
@@ -442,7 +442,7 @@ func TestLoadVersionInvalid(t *testing.T) {
 	res, err := app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: 1})
 	require.NoError(t, err)
 	commitID1 := storetypes.CommitID{Version: 1, Hash: res.AppHash}
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	// create a new app with the stores mounted under the same cap key
@@ -649,7 +649,7 @@ func TestBaseAppAnteHandler(t *testing.T) {
 	require.Equal(t, int64(2), getIntFromStore(t, store, anteKey))
 	require.Equal(t, int64(1), getIntFromStore(t, store, deliverKey))
 
-	suite.baseApp.Commit()
+	suite.baseApp.Commit(&abci.RequestCommit{})
 }
 
 func TestBaseAppPostHandler(t *testing.T) {
@@ -719,12 +719,12 @@ func TestABCI_CreateQueryContext(t *testing.T) {
 
 	_, err := app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: 1})
 	require.NoError(t, err)
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	_, err = app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: 2})
 	require.NoError(t, err)
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	testCases := []struct {
@@ -877,7 +877,7 @@ func TestLoadVersionPruning(t *testing.T) {
 	for i := int64(1); i <= 7; i++ {
 		res, err := app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: i})
 		require.NoError(t, err)
-		_, err = app.Commit()
+		_, err = app.Commit(&abci.RequestCommit{})
 		require.NoError(t, err)
 		lastCommitID = storetypes.CommitID{Version: i, Hash: res.AppHash}
 	}

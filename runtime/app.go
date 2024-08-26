@@ -175,8 +175,8 @@ func (a *App) Precommiter(ctx sdk.Context) {
 }
 
 // PrepareCheckStater application updates every commit
-func (a *App) PrepareCheckStater(ctx sdk.Context) {
-	a.ModuleManager.PrepareCheckState(ctx)
+func (a *App) PrepareCheckStater(ctx sdk.Context, req *abci.RequestCommit) {
+	a.ModuleManager.PrepareCheckState(ctx, req)
 }
 
 // InitChainer initializes the chain.

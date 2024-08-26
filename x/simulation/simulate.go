@@ -224,7 +224,7 @@ func SimulateFromSeed(
 		logWriter.AddEntry(EndBlockEntry(blockHeight))
 
 		if config.Commit {
-			app.Commit()
+			app.Commit(&abci.RequestCommit{})
 		}
 
 		if proposerAddress == nil {

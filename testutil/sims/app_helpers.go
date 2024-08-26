@@ -114,7 +114,7 @@ func NextBlock(app *runtime.App, ctx sdk.Context, jumpTime time.Duration) (sdk.C
 	if err != nil {
 		return sdk.Context{}, err
 	}
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	if err != nil {
 		return sdk.Context{}, err
 	}

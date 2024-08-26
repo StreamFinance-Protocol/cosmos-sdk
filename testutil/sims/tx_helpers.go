@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	abci "github.com/cometbft/cometbft/abci/types"
 	types2 "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/proto/tendermint/types"
 	"github.com/stretchr/testify/require"
@@ -142,7 +143,7 @@ func SignCheckDeliver(
 		require.False(t, finalizeSuccess)
 	}
 
-	app.Commit()
+	app.Commit(&abci.RequestCommit{})
 
 	gInfo := sdk.GasInfo{GasWanted: uint64(txResult.GasWanted), GasUsed: uint64(txResult.GasUsed)}
 	txRes := sdk.Result{Data: txResult.Data, Log: txResult.Log, Events: txResult.Events}

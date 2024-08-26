@@ -69,7 +69,7 @@ func TestABCI_First_block_Height(t *testing.T) {
 		InitialHeight:   1,
 	})
 	require.NoError(t, err)
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	ctx := app.GetContextForCheckTx(nil)
@@ -143,7 +143,7 @@ func TestABCI_InitChain(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	resQ, err = app.Query(context.TODO(), &query)
@@ -167,7 +167,7 @@ func TestABCI_InitChain(t *testing.T) {
 	// commit and ensure we can still query
 	_, err = app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: app.LastBlockHeight() + 1})
 	require.NoError(t, err)
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	resQ, err = app.Query(context.TODO(), &query)
@@ -186,7 +186,7 @@ func TestABCI_InitChain_WithInitialHeight(t *testing.T) {
 		},
 	)
 	require.NoError(t, err)
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	require.Equal(t, int64(3), app.LastBlockHeight())
@@ -209,7 +209,7 @@ func TestABCI_FinalizeBlock_WithInitialHeight(t *testing.T) {
 
 	_, err = app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: 3})
 	require.NoError(t, err)
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	require.Equal(t, int64(3), app.LastBlockHeight())
@@ -276,7 +276,7 @@ func TestABCI_FinalizeBlock_WithBeginAndEndBlocker(t *testing.T) {
 	require.Equal(t, "mode", res.Events[1].Attributes[1].Key)
 	require.Equal(t, "EndBlock", res.Events[1].Attributes[1].Value)
 
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	require.Equal(t, int64(1), app.LastBlockHeight())
@@ -449,7 +449,7 @@ func TestABCI_GRPCQuery(t *testing.T) {
 
 	_, err = suite.baseApp.FinalizeBlock(&abci.RequestFinalizeBlock{Height: suite.baseApp.LastBlockHeight() + 1})
 	require.NoError(t, err)
-	_, err = suite.baseApp.Commit()
+	_, err = suite.baseApp.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	reqQuery := abci.RequestQuery{
@@ -517,12 +517,12 @@ func TestBaseApp_PrepareCheckState(t *testing.T) {
 	require.NoError(t, err)
 
 	wasPrepareCheckStateCalled := false
-	app.SetPrepareCheckStater(func(ctx sdk.Context) {
+	app.SetPrepareCheckStater(func(ctx sdk.Context, req *abci.RequestCommit) {
 		wasPrepareCheckStateCalled = true
 	})
 	app.Seal()
 
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 	require.Equal(t, true, wasPrepareCheckStateCalled)
 }
@@ -551,7 +551,7 @@ func TestBaseApp_Precommit(t *testing.T) {
 	})
 	app.Seal()
 
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 	require.Equal(t, true, wasPrecommiterCalled)
 }
@@ -599,7 +599,7 @@ func TestABCI_CheckTx(t *testing.T) {
 	require.NotNil(t, getCheckStateCtx(suite.baseApp).BlockGasMeter(), "block gas meter should have been set to checkState")
 	require.NotEmpty(t, getCheckStateCtx(suite.baseApp).HeaderHash())
 
-	_, err = suite.baseApp.Commit()
+	_, err = suite.baseApp.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	checkStateStore = getCheckStateCtx(suite.baseApp).KVStore(capKey1)
@@ -652,7 +652,7 @@ func TestABCI_FinalizeBlock_DeliverTx(t *testing.T) {
 			require.Equal(t, sdk.MarkEventsToIndex(counterEvent(sdk.EventTypeMessage, counter).ToABCIEvents(), map[string]struct{}{})[0].Attributes[0], events[2].Attributes[0], "msg handler update counter event")
 		}
 
-		_, err = suite.baseApp.Commit()
+		_, err = suite.baseApp.Commit(&abci.RequestCommit{})
 		require.NoError(t, err)
 	}
 }
@@ -798,7 +798,7 @@ func TestABCI_Query_SimulateTx(t *testing.T) {
 
 		_, err = suite.baseApp.FinalizeBlock(&abci.RequestFinalizeBlock{Height: count})
 		require.NoError(t, err)
-		_, err = suite.baseApp.Commit()
+		_, err = suite.baseApp.Commit(&abci.RequestCommit{})
 		require.NoError(t, err)
 	}
 }
@@ -973,7 +973,7 @@ func TestABCI_TxGasLimits(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	_, err = suite.baseApp.Commit()
+	_, err = suite.baseApp.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	testCases := []struct {
@@ -1243,7 +1243,7 @@ func TestABCI_Query(t *testing.T) {
 	require.Equal(t, 0, len(res.Value))
 
 	// query returns correct value after Commit
-	_, err = suite.baseApp.Commit()
+	_, err = suite.baseApp.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	res, err = suite.baseApp.Query(context.TODO(), &query)
@@ -1371,14 +1371,14 @@ func TestPrepareCheckStateCalledWithCheckState(t *testing.T) {
 	app := baseapp.NewBaseApp(name, logger, db, nil)
 
 	wasPrepareCheckStateCalled := false
-	app.SetPrepareCheckStater(func(ctx sdk.Context) {
+	app.SetPrepareCheckStater(func(ctx sdk.Context, req *abci.RequestCommit) {
 		require.Equal(t, true, ctx.IsCheckTx())
 		wasPrepareCheckStateCalled = true
 	})
 
 	_, err := app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: 1})
 	require.NoError(t, err)
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	require.Equal(t, true, wasPrepareCheckStateCalled)
@@ -1402,7 +1402,7 @@ func TestPrecommiterCalledWithDeliverState(t *testing.T) {
 
 	_, err := app.FinalizeBlock(&abci.RequestFinalizeBlock{Height: 1})
 	require.NoError(t, err)
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	require.Equal(t, true, wasPrecommiterCalled)
@@ -2273,7 +2273,7 @@ func TestBaseApp_VoteExtensions(t *testing.T) {
 	// any vote extensions on block 1 in PrepareProposal
 	avgPrice := getFinalizeBlockStateCtx(suite.baseApp).KVStore(capKey1).Get([]byte("avgPrice"))
 	require.Nil(t, avgPrice)
-	_, err = suite.baseApp.Commit()
+	_, err = suite.baseApp.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	// Now onto the second block, this time we process vote extensions from the
@@ -2322,7 +2322,7 @@ func TestBaseApp_VoteExtensions(t *testing.T) {
 	require.GreaterOrEqual(t, binary.BigEndian.Uint64(avgPrice), uint64(10000000))
 	require.Less(t, binary.BigEndian.Uint64(avgPrice), uint64(11000000))
 
-	_, err = suite.baseApp.Commit()
+	_, err = suite.baseApp.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	// check if avgPrice was committed
@@ -2401,7 +2401,7 @@ func TestOptimisticExecution(t *testing.T) {
 		require.NoError(t, err)
 		require.Len(t, respFinalizeBlock.TxResults, 1)
 
-		_, err = suite.baseApp.Commit()
+		_, err = suite.baseApp.Commit(&abci.RequestCommit{})
 		require.NoError(t, err)
 	}
 

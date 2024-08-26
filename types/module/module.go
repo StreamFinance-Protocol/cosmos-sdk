@@ -51,6 +51,10 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+type AppModuleClob interface {
+	PrepareCheckState(ctx context.Context, req *abci.RequestCommit)
+}
+
 // AppModuleBasic is the standard form for basic non-dependant elements of an application module.
 type AppModuleBasic interface {
 	HasName
@@ -842,14 +846,26 @@ func (m *Manager) Precommit(ctx sdk.Context) error {
 }
 
 // PrepareCheckState performs functionality for preparing the check state for all modules.
-func (m *Manager) PrepareCheckState(ctx sdk.Context) error {
+func (m *Manager) PrepareCheckState(ctx sdk.Context, req *abci.RequestCommit) error {
 	for _, moduleName := range m.OrderPrepareCheckStaters {
-		module, ok := m.Modules[moduleName].(appmodule.HasPrepareCheckState)
-		if !ok {
-			continue
-		}
-		if err := module.PrepareCheckState(ctx); err != nil {
-			return err
+
+		if moduleName == "clob" {
+
+			module, ok := m.Modules[moduleName].(AppModuleClob)
+			if !ok {
+				continue
+			}
+			module.PrepareCheckState(ctx, req)
+
+		} else {
+
+			module, ok := m.Modules[moduleName].(appmodule.HasPrepareCheckState)
+			if !ok {
+				continue
+			}
+			if err := module.PrepareCheckState(ctx); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

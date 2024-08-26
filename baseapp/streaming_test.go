@@ -103,7 +103,7 @@ func TestABCI_MultiListener_StateChanges(t *testing.T) {
 			// require.Equal(t, sdk.MarkEventsToIndex(counterEvent(sdk.EventTypeMessage, counter).ToABCIEvents(), map[string]struct{}{})[0], events[2], "msg handler update counter event")
 		}
 
-		suite.baseApp.Commit()
+		suite.baseApp.Commit(&abci.RequestCommit{})
 
 		require.Equal(t, expectedChangeSet, mockListener1.ChangeSet, "should contain the same changeSet")
 		require.Equal(t, expectedChangeSet, mockListener2.ChangeSet, "should contain the same changeSet")
@@ -141,6 +141,6 @@ func Test_Ctx_with_StreamingManager(t *testing.T) {
 		require.Equal(t, listeners, sm.ABCIListeners, fmt.Sprintf("should contain same listeners: %v", listeners))
 		require.Equal(t, true, sm.StopNodeOnErr, "should contain StopNodeOnErr = true")
 
-		suite.baseApp.Commit()
+		suite.baseApp.Commit(&abci.RequestCommit{})
 	}
 }

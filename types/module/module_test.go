@@ -563,11 +563,11 @@ func TestManager_PrepareCheckState(t *testing.T) {
 
 	mockAppModule1.EXPECT().PrepareCheckState(gomock.Any()).Times(1).Return(nil)
 	mockAppModule2.EXPECT().PrepareCheckState(gomock.Any()).Times(1).Return(nil)
-	err := mm.PrepareCheckState(sdk.Context{})
+	err := mm.PrepareCheckState(sdk.Context{}, &abci.RequestCommit{})
 	require.NoError(t, err)
 
 	mockAppModule1.EXPECT().PrepareCheckState(gomock.Any()).Times(1).Return(errors.New("some error"))
-	err = mm.PrepareCheckState(sdk.Context{})
+	err = mm.PrepareCheckState(sdk.Context{}, &abci.RequestCommit{})
 	require.EqualError(t, err, "some error")
 }
 

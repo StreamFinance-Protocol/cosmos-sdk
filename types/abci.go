@@ -9,7 +9,7 @@ type InitChainer func(ctx Context, req *abci.RequestInitChain) (*abci.ResponseIn
 
 // PrepareCheckStater runs code during commit after the block has been committed, and the `checkState`
 // has been branched for the new block.
-type PrepareCheckStater func(ctx Context)
+type PrepareCheckStater func(ctx Context, req *abci.RequestCommit)
 
 // Precommiter runs code during commit immediately before the `deliverState` is written to the `rootMultiStore`.
 type Precommiter func(ctx Context)

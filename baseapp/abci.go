@@ -954,7 +954,7 @@ func (app *BaseApp) checkHalt(height int64, time time.Time) error {
 // defined in config, Commit will execute a deferred function call to check
 // against that height and gracefully halt if it matches the latest committed
 // height.
-func (app *BaseApp) Commit() (*abci.ResponseCommit, error) {
+func (app *BaseApp) Commit(req *abci.RequestCommit) (*abci.ResponseCommit, error) {
 	app.mtx.Lock()
 	defer app.mtx.Unlock()
 
@@ -998,7 +998,7 @@ func (app *BaseApp) Commit() (*abci.ResponseCommit, error) {
 	app.finalizeBlockState = nil
 
 	if app.prepareCheckStater != nil {
-		app.prepareCheckStater(app.checkState.Context())
+		app.prepareCheckStater(app.checkState.Context(), req)
 	}
 
 	// The SnapshotIfApplicable method will create the snapshot by starting the goroutine

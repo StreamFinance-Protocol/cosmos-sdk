@@ -77,7 +77,7 @@ func BenchmarkOneBankSendTxPerBlock(b *testing.B) {
 
 	require.NoError(b, testutil.FundAccount(ctx, s.BankKeeper, addr1, sdk.NewCoins(sdk.NewInt64Coin("foocoin", 100000000000))))
 
-	_, err = baseApp.Commit()
+	_, err = baseApp.Commit(&abci.RequestCommit{})
 	require.NoError(b, err)
 
 	txGen := moduletestutil.MakeTestTxConfig()
@@ -109,7 +109,7 @@ func BenchmarkOneBankSendTxPerBlock(b *testing.B) {
 		)
 		require.NoError(b, err)
 
-		_, err = baseApp.Commit()
+		_, err = baseApp.Commit(&abci.RequestCommit{})
 		require.NoError(b, err)
 
 		height++
@@ -135,7 +135,7 @@ func BenchmarkOneBankMultiSendTxPerBlock(b *testing.B) {
 
 	require.NoError(b, testutil.FundAccount(ctx, s.BankKeeper, addr1, sdk.NewCoins(sdk.NewInt64Coin("foocoin", 100000000000))))
 
-	_, err = baseApp.Commit()
+	_, err = baseApp.Commit(&abci.RequestCommit{})
 	require.NoError(b, err)
 
 	txGen := moduletestutil.MakeTestTxConfig()
@@ -167,7 +167,7 @@ func BenchmarkOneBankMultiSendTxPerBlock(b *testing.B) {
 		)
 		require.NoError(b, err)
 
-		_, err = baseApp.Commit()
+		_, err = baseApp.Commit(&abci.RequestCommit{})
 		require.NoError(b, err)
 
 		height++
