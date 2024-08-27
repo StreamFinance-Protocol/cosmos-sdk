@@ -424,6 +424,10 @@ func (m *Manager) SetOrderPrepareCheckStaters(moduleNames ...string) {
 	m.assertNoForgottenModules("SetOrderPrepareCheckStaters", moduleNames,
 		func(moduleName string) bool {
 			module := m.Modules[moduleName]
+			// Allow "clob" module to be included without implementing HasPrepareCheckState
+			if moduleName == "clob" {
+				return false
+			}
 			_, hasPrepareCheckState := module.(appmodule.HasPrepareCheckState)
 			return !hasPrepareCheckState
 		})
