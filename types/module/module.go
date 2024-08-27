@@ -851,14 +851,24 @@ func (m *Manager) Precommit(ctx sdk.Context) error {
 
 // PrepareCheckState performs functionality for preparing the check state for all modules.
 func (m *Manager) PrepareCheckState(ctx sdk.Context, req *abci.RequestCommit) error {
+
+	fmt.Println("XXX prepare check state in cosmos sdk")
+
 	for _, moduleName := range m.OrderPrepareCheckStaters {
+
+		fmt.Println("XXX", moduleName)
 
 		if moduleName == "clob" {
 
+			fmt.Println("XXX inside clob")
+
 			module, ok := m.Modules[moduleName].(AppModuleClob)
 			if !ok {
+				fmt.Println("XXX didn't conver")
 				continue
 			}
+
+			fmt.Println("XXX called prepare check state")
 			module.PrepareCheckState(ctx, req)
 
 		} else {
