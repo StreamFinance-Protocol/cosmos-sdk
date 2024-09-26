@@ -182,9 +182,6 @@ is performed. Note, when enabled, gRPC will also be automatically enabled.
 			}
 
 			withCMT, _ := cmd.Flags().GetBool(flagWithComet)
-			nonValidatingFullNode, _ := cmd.Flags().GetBool("non-validating-full-node")
-
-			panic(fmt.Sprintf("Debug: nonValidatingFullNode: %v, withCMT: %v", nonValidatingFullNode, withCMT))
 
 			if !withCMT {
 				serverCtx.Logger.Info("starting ABCI without CometBFT")
