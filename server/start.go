@@ -206,6 +206,9 @@ is performed. Note, when enabled, gRPC will also be automatically enabled.
 	}
 
 	cmd.Flags().String(flags.FlagHome, defaultNodeHome, "The application home directory")
+
+	cmd.Flags().Bool("non-validating-full-node", false, "Run a non-validating full node")
+
 	addStartNodeFlags(cmd, opts)
 	return cmd
 }
