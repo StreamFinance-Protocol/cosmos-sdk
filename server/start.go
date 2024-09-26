@@ -186,6 +186,9 @@ is performed. Note, when enabled, gRPC will also be automatically enabled.
 				serverCtx.Logger.Info("starting ABCI without CometBFT")
 			}
 
+			fmt.Printf("Debug: ServerContext Viper in PersistentPreRunE: %+v\n", serverCtx.Viper.AllSettings())
+			serverCtx.Logger.Debug("Debug: ServerContext Viper in PersistentPreRunE", "value", serverCtx.Viper.AllSettings())
+
 			err = wrapCPUProfile(serverCtx, func() error {
 				return start(cmd.Context(), serverCtx, clientCtx, appCreator, withCMT, opts)
 			})
