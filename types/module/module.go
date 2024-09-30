@@ -426,7 +426,8 @@ func (m *Manager) SetOrderPrepareCheckStaters(moduleNames ...string) {
 			module := m.Modules[moduleName]
 			// Allow "clob" module to be included without implementing HasPrepareCheckState
 			if moduleName == "clob" {
-				return false
+				_, hasClobPerpareCheckState := module.(AppModuleClob)
+				return !hasClobPerpareCheckState
 			}
 			_, hasPrepareCheckState := module.(appmodule.HasPrepareCheckState)
 			return !hasPrepareCheckState
