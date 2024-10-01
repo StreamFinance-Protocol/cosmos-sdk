@@ -75,7 +75,7 @@ func TestSimAppExportAndBlockedAddrs(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	_, err = app.Commit()
+	_, err = app.Commit(&abci.RequestCommit{})
 	require.NoError(t, err)
 
 	// Making a new app object with the db, so that initchain hasn't been called
@@ -120,7 +120,7 @@ func TestRunMigrations(t *testing.T) {
 
 	// Initialize the chain
 	app.InitChain(&abci.RequestInitChain{})
-	app.Commit()
+	app.Commit(&abci.RequestCommit{})
 
 	testCases := []struct {
 		name         string
