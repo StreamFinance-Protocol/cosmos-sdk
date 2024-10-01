@@ -40,7 +40,8 @@ func TestRollback(t *testing.T) {
 		app.FinalizeBlock(&abci.RequestFinalizeBlock{
 			Height: header.Height,
 		})
-		app.Commit()
+		app.Commit(&abci.RequestCommit{})
+
 	}
 
 	assert.Equal(t, ver0+10, app.LastBlockHeight())
@@ -70,7 +71,7 @@ func TestRollback(t *testing.T) {
 		app.FinalizeBlock(&abci.RequestFinalizeBlock{
 			Height: header.Height,
 		})
-		app.Commit()
+		app.Commit(&abci.RequestCommit{})
 	}
 
 	assert.Equal(t, ver0+10, app.LastBlockHeight())
