@@ -320,6 +320,14 @@ func (svd SigVerificationDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simul
 			}
 			txData := adaptableTx.GetSigningTxData()
 			err = authsigning.VerifySignature(ctx, pubKey, signerData, sig.Data, svd.signModeHandler, txData)
+
+			fmt.Println("signature verification error", err)
+			fmt.Println("signature data", sig.Data)
+			fmt.Println("signer data", signerData)
+			fmt.Println("pubkey", pubKey)
+			fmt.Println("svd.signModeHandler", svd.signModeHandler)
+			fmt.Println("tx data", txData)
+
 			if err != nil {
 				var errMsg string
 				if OnlyLegacyAminoSigners(sig.Data) {
