@@ -321,12 +321,21 @@ func (svd SigVerificationDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simul
 			txData := adaptableTx.GetSigningTxData()
 			err = authsigning.VerifySignature(ctx, pubKey, signerData, sig.Data, svd.signModeHandler, txData)
 
-			fmt.Println("signature verification error", err)
-			fmt.Println("signature data", sig.Data)
-			fmt.Println("signer data", signerData)
-			fmt.Println("pubkey", pubKey)
-			fmt.Println("svd.signModeHandler", svd.signModeHandler)
-			fmt.Println("tx data", txData)
+			debugInfo := fmt.Sprintf(
+				"Signature Verification Debug:\n"+
+					"Error: %v\n"+
+					"Signature Data: %+v\n"+
+					"Signer Data: %+v\n"+
+					"Public Key: %+v\n"+
+					"Sign Mode Handler: %+v\n"+
+					"Transaction Data: %+v",
+				err,
+				sig.Data,
+				signerData,
+				pubKey,
+				svd.signModeHandler,
+				txData,
+			)
 
 			if err != nil {
 				var errMsg string
@@ -335,7 +344,7 @@ func (svd SigVerificationDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simul
 					// and therefore communicate sequence number as a potential cause of error.
 					errMsg = fmt.Sprintf("signature verification failed; please verify account number (%d), sequence (%d) and chain-id (%s)", accNum, acc.GetSequence(), chainID)
 				} else {
-					errMsg = fmt.Sprintf("signature verification failed; please verify account number (%d) and chain-id (%s): (%s)", accNum, chainID, err.Error())
+					errMsg = fmt.Sprintf("signature verification failed; please verify account number (%d) and chain-id (%s): (%s) and debug info: %s", accNum, chainID, err.Error(), debugInfo)
 				}
 				return ctx, errorsmod.Wrap(sdkerrors.ErrUnauthorized, errMsg)
 
