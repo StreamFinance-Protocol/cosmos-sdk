@@ -55,6 +55,8 @@ func (k Keeper) GetValidatorByConsAddr(ctx context.Context, consAddr sdk.ConsAdd
 		return validator, types.ErrNoValidatorFound
 	}
 
+	panic(fmt.Sprintf("validator record not found for opAddr address: %X\n", opAddr))
+
 	return k.GetValidator(ctx, opAddr)
 }
 
