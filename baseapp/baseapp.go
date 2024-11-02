@@ -847,7 +847,7 @@ func (app *BaseApp) runCheckTxConcurrently(mode execMode, txBytes []byte) (gInfo
 		panic("runCheckTxConcurrently can only be invoked for CheckTx and RecheckTx.")
 	}
 
-	// We don't support the post handler specifically to avoid creating a branched MultiStore and since dYdX
+	// We don't support the post handler specifically to avoid creating a branched MultiStore and since Klyra
 	// doesn't need support for it. Once support is necessary or when we are trying to upstream these changes
 	// we can guard creation of the MultiStore to only occur when the post handler is specified.
 	if app.postHandler != nil {

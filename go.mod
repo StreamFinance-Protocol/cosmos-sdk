@@ -198,6 +198,6 @@ retract (
 	v0.43.0
 )
 
-replace github.com/cometbft/cometbft => github.com/StreamFinance-Protocol/cometbft v0.0.0-20241001122724-c1b88a873143
+replace github.com/cometbft/cometbft => github.com/StreamFinance-Protocol/cometbft v0.0.0-20241102223103-20006fcd0f40
 
 replace cosmossdk.io/store => github.com/dydxprotocol/cosmos-sdk/store v1.0.3-0.20240326190927-d35618165018
